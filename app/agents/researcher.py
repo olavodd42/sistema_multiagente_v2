@@ -64,59 +64,31 @@ class ResearcherAgent:
         )
     
     @staticmethod
-    def task_prompt(topic: str) -> str:
-        """
-        Gera o prompt da tarefa para o agente pesquisador.
-        
-        Args:
-            topic (str): Tópico a ser pesquisado
-            
-        Returns:
-            str: Prompt formatado com instruções específicas
-        """
-        return f"""
-        # Pesquisa sobre "{topic}"
-        
-        ## Instruções
-        
-        1. Pesquise informações abrangentes sobre o tópico "{topic}".
-        2. Primeiro, realize uma busca ampla para identificar os resultados mais relevantes.
-        3. Obtenha o resumo dos 2-3 resultados mais relevantes.
-        4. Para pelo menos 2 dos resultados mais relevantes, colete o conteúdo completo, dividido por seções.
-        5. Organize as informações coletadas de forma estruturada, identificando:
-           - Definições e conceitos principais
-           - Informações históricas relevantes
-           - Fatos e dados atuais
-           - Diferentes perspectivas ou abordagens, se aplicável
-        6. Identifique e extraia pelo menos 5-10 palavras-chave relacionadas ao tópico.
-        7. Cite todas as fontes utilizadas.
-        
-        ## Formato de saída (JSON)
-        
-        Estruture sua resposta no seguinte formato JSON:
-        
-        ```json
-        {{
+    def task_prompt(topic: str) -> List[str]:
+        return [
+            f"# Pesquisa sobre \"{topic}\"",
+            f"""## Instruções
+
+                1. Pesquise informações abrangentes sobre o tópico "{topic}".
+                2. Primeiro, realize uma busca ampla para identificar os resultados mais relevantes.
+                3. Obtenha o resumo dos 2-3 resultados mais relevantes.
+                4. Para pelo menos 2 dos resultados mais relevantes, colete o conteúdo completo, dividido por seções.
+                5. Organize as informações coletadas de forma estruturada.
+                6. Extraia palavras-chave e fontes.
+                """,
+                f"""## Formato de saída
+
+                ```json
+            {{
             "topic": "{topic}",
-            "summary": "Um resumo abrangente baseado em todas as fontes",
-            "main_sections": [
-                {{
-                    "title": "Título da Seção 1",
-                    "content": "Conteúdo detalhado da seção 1"
-                }},
-                {{
-                    "title": "Título da Seção 2",
-                    "content": "Conteúdo detalhado da seção 2"
-                }}
-            ],
-            "keywords": ["palavra-chave1", "palavra-chave2", ...],
-            "sources": ["Título da fonte 1", "Título da fonte 2", ...]
-        }}
-        ```
-        
-        Concentre-se em obter informações precisas, detalhadas e bem estruturadas.
-        O redator utilizará estas informações para criar um artigo informativo sobre "{topic}".
-        """
+            "summary": "...",
+            "main_sections": [{{"title": "...", "content": "..."}}],
+            "keywords": ["..."],
+            "sources": ["..."]
+            }}
+            ```"""
+        ]
+
 
 
 class ResearchResult:

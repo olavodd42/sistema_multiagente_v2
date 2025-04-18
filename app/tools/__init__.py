@@ -1,9 +1,7 @@
 """
-Módulo de agentes para o sistema de geração de artigos.
+Módulo de ferramentas para o sistema de geração de artigos.
 """
 
-from app.agents.researcher import ResearcherAgent
-from app.agents.writer import WriterAgent
-from app.agents.editor import EditorAgent
+from app.tools.wikipedia_tool import WikipediaSearchTool, WikipediaContentTool, WikipediaSummaryTool
 
-__all__ = ["ResearcherAgent", "WriterAgent", "EditorAgent"]
+__all__ = ["WikipediaSearchTool", "WikipediaContentTool", "WikipediaSummaryTool"]

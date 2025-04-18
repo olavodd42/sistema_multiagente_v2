@@ -98,7 +98,7 @@ class TestArticleCrew:
         assert crew.llm == "groq"
         assert crew.language == "pt"
         assert crew.verbose is True
-        assert crew.process.value == "sequential"
+        assert crew.process == "sequential"
     
     @patch('app.crew.article_crew.Crew')
     @patch('app.crew.article_crew.ResearcherAgent')
@@ -110,26 +110,36 @@ class TestArticleCrew:
         mock_researcher = MagicMock()
         mock_writer = MagicMock()
         mock_editor = MagicMock()
-        
+
         mock_researcher_agent.return_value.create.return_value = mock_researcher
         mock_writer_agent.return_value.create.return_value = mock_writer
         mock_editor_agent.return_value.create.return_value = mock_editor
-        
+
+        # CORRIGE O ERRO: garante que task_prompt retorna uma lista de strings
+        mock_researcher_agent.task_prompt.return_value = [
+            "# Pesquisa mock",
+            "Instruções simuladas"
+        ]
+
         mock_crew_instance = MagicMock()
         mock_crew.return_value = mock_crew_instance
-        mock_crew_instance.kickoff.return_value = '{"title": "Test Article", "summary": "This is a test summary", "sections": [{"title": "Section 1", "content": "This is section 1 content with at least fifty characters for validation."}], "metadata": {"keywords": ["test"], "sources": ["test source"], "generated_at": "2025-04-18T12:00:00"}}'
-        
+        mock_crew_instance.kickoff.return_value = (
+            '{"title": "Test Article", "summary": "This is a test summary", '
+            '"sections": [{"title": "Section 1", "content": "This is section 1 content with at least fifty characters for validation."}], '
+            '"metadata": {"keywords": ["test"], "sources": ["test source"], "generated_at": "2025-04-18T12:00:00"}}'
+        )
+
         # Criar e executar a crew
         crew = ArticleCrew(llm="groq", language="pt")
         result = crew.run("Teste", 300)
-        
+
         # Verificações
         assert mock_crew.called
         assert mock_crew_instance.kickoff.called
         assert result["status"] == "success"
         assert "article" in result
         assert "processing_time" in result
-    
+
     @patch('app.crew.article_crew.Crew')
     def test_parse_json_result(self, mock_crew):
         """Testa o método _parse_json_result."""
