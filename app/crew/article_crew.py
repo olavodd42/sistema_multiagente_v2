@@ -90,17 +90,14 @@ class ArticleCrew:
         Returns:
             Uma lista de tarefas configuradas
         """
-        # Aqui está o ponto onde precisamos modificar o código!
-        # O construtor Task espera um dicionário para o parâmetro "config"
-        
-        # Cria a tarefa de pesquisa com a forma correta
+        # Correção: Passar o prompt na propriedade correta
         research_prompts = ResearcherAgent.task_prompt(topic)
         research_task = Task(
             description=f"Pesquisar informações sobre '{topic}' na Wikipedia",
             agent=self.researcher,
             expected_output="Dados estruturados contendo resumo, seções principais, palavras-chave e fontes",
-            # Adicione o prompt como parâmetro "context" para a Task
-            context=research_prompts
+            # Corrigido: context deve ser um dicionário
+            context={"prompt": research_prompts}
         )
         
         # Cria a tarefa de escrita (função auxiliar para gerar o prompt)
@@ -110,7 +107,8 @@ class ArticleCrew:
                 description=f"Escrever um artigo com pelo menos {min_words} palavras usando as informações pesquisadas",
                 agent=self.writer,
                 expected_output="Artigo completo no formato JSON com título, resumo, seções e metadados",
-                context=WriterAgent.task_prompt(research_output, min_words)
+                # Corrigido: context deve ser um dicionário
+                context={"prompt": WriterAgent.task_prompt(research_output, min_words)}
             )
         
         # Cria a tarefa de edição (função auxiliar para gerar o prompt)
@@ -120,7 +118,8 @@ class ArticleCrew:
                 description=f"Revisar e aprimorar o artigo, garantindo qualidade e mínimo de {min_words} palavras",
                 agent=self.editor,
                 expected_output="Artigo revisado e aprimorado no formato JSON",
-                context=EditorAgent.task_prompt(article_data, min_words)
+                # Corrigido: context deve ser um dicionário
+                context={"prompt": EditorAgent.task_prompt(article_data, min_words)}
             )
         
         # Configuramos a tarefa de pesquisa e as gerações para as próximas tarefas
