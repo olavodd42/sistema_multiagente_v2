@@ -2,7 +2,7 @@
 Agente Pesquisador responsável por coletar informações da Wikipedia.
 """
 from crewai import Agent
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Union
 
 from app.tools.wikipedia_tool import WikipediaSearchTool, WikipediaContentTool, WikipediaSummaryTool
 
@@ -14,7 +14,7 @@ class ResearcherAgent:
     
     def __init__(
         self, 
-        llm: str = "groq",
+        llm: Any = None,
         language: str = "pt",
         verbose: bool = False
     ):
@@ -22,7 +22,7 @@ class ResearcherAgent:
         Inicializa a factory do agente pesquisador.
         
         Args:
-            llm (str): Nome do LLM a ser usado (groq ou gemini)
+            llm: Instância do LLM ou nome do LLM (groq ou gemini)
             language (str): Código do idioma para pesquisa na Wikipedia
             verbose (bool): Se deve mostrar logs detalhados
         """
@@ -88,49 +88,3 @@ class ResearcherAgent:
             }}
             ```"""
         ]
-
-
-
-class ResearchResult:
-    """
-    Estrutura para organizar os resultados da pesquisa.
-    """
-    
-    def __init__(
-        self,
-        topic: str,
-        summary: str,
-        main_sections: List[Dict[str, str]],
-        keywords: List[str],
-        sources: List[str]
-    ):
-        """
-        Inicializa um resultado de pesquisa.
-        
-        Args:
-            topic (str): Tópico pesquisado
-            summary (str): Resumo das informações coletadas
-            main_sections (List[Dict[str, str]]): Seções principais com título e conteúdo
-            keywords (List[str]): Palavras-chave relacionadas
-            sources (List[str]): Fontes consultadas
-        """
-        self.topic = topic
-        self.summary = summary
-        self.main_sections = main_sections
-        self.keywords = keywords
-        self.sources = sources
-    
-    def to_dict(self) -> Dict[str, Any]:
-        """
-        Converte o resultado da pesquisa para dicionário.
-        
-        Returns:
-            Dict[str, Any]: Representação em dicionário do resultado
-        """
-        return {
-            "topic": self.topic,
-            "summary": self.summary,
-            "main_sections": self.main_sections,
-            "keywords": self.keywords,
-            "sources": self.sources
-        }

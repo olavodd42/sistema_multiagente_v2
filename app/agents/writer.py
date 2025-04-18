@@ -2,7 +2,7 @@
 Agente Redator responsável por transformar informações em artigos.
 """
 from crewai import Agent
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Union
 
 
 class WriterAgent:
@@ -12,14 +12,14 @@ class WriterAgent:
     
     def __init__(
         self, 
-        llm: str = "groq",
+        llm: Any = None,
         verbose: bool = False
     ):
         """
         Inicializa a factory do agente redator.
         
         Args:
-            llm (str): Nome do LLM a ser usado (groq ou gemini)
+            llm: Instância do LLM ou nome do LLM (groq ou gemini)
             verbose (bool): Se deve mostrar logs detalhados
         """
         self.llm = llm

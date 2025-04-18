@@ -1,10 +1,19 @@
+# Principais bibliotecas
 crewai>=0.28.0
-crewai-tools>=0.1.6
-fastapi>=0.104.0
+langchain>=0.1.0
+langchain-community>=0.1.0
+langchain-groq>=0.1.0
+langchain-google-genai>=0.1.0
+fastapi>=0.103.1
+pydantic>=2.4.0
 uvicorn>=0.23.2
-python-dotenv>=1.0.0
-pydantic>=2.4.2
-google-generativeai>=0.3.2
-groq>=0.4.0
-wikipedia-api>=0.6.0
 httpx>=0.25.0
+python-dotenv>=1.0.0
+
+# Bibliotecas para CLI
+argparse>=1.4.0
+
+# LLM e integração
+litellm>=1.12.0
+groq>=0.4.0
+google-generativeai>=0.3.0

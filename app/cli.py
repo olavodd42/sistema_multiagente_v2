@@ -5,6 +5,7 @@ import os
 import sys
 import json
 import argparse
+import traceback
 from dotenv import load_dotenv
 
 from crewai import Process
@@ -78,8 +79,9 @@ def main():
             
     except Exception as e:
         print(f"\n❌ Erro: {str(e)}")
+        print("\nStack trace completo:")
+        traceback.print_exc()
         sys.exit(1)
-
 
 if __name__ == "__main__":
     main()

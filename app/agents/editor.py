@@ -2,7 +2,7 @@
 Agente Editor responsável por revisar e melhorar artigos.
 """
 from crewai import Agent
-from typing import Dict, Any
+from typing import Dict, Any, Union
 
 
 class EditorAgent:
@@ -12,14 +12,14 @@ class EditorAgent:
     
     def __init__(
         self, 
-        llm: str = "groq",
+        llm: Any = None,
         verbose: bool = False
     ):
         """
         Inicializa a factory do agente editor.
         
         Args:
-            llm (str): Nome do LLM a ser usado (groq ou gemini)
+            llm: Instância do LLM ou nome do LLM (groq ou gemini)
             verbose (bool): Se deve mostrar logs detalhados
         """
         self.llm = llm

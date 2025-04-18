@@ -100,32 +100,31 @@ class TestArticleCrew:
         assert crew.verbose is True
         assert crew.process == "sequential"
     
+    @patch('app.crew.article_crew.Task')
     @patch('app.crew.article_crew.Crew')
     @patch('app.crew.article_crew.ResearcherAgent')
     @patch('app.crew.article_crew.WriterAgent')
     @patch('app.crew.article_crew.EditorAgent')
-    def test_run_article_generation(self, mock_editor_agent, mock_writer_agent, mock_researcher_agent, mock_crew):
+    def test_run_article_generation(self, mock_editor_agent, mock_writer_agent, mock_researcher_agent, mock_crew, mock_task):
         """Testa o método run para geração de artigos."""
-        # Setup dos mocks
-        mock_researcher = MagicMock()
-        mock_writer = MagicMock()
-        mock_editor = MagicMock()
+        # Configurar mock para Task para não validar
+        mock_task.return_value = MagicMock()
+        
+        # Setup dos mocks de agentes
+        mock_researcher = MagicMock(spec=dict)
+        mock_writer = MagicMock(spec=dict)
+        mock_editor = MagicMock(spec=dict)
 
         mock_researcher_agent.return_value.create.return_value = mock_researcher
         mock_writer_agent.return_value.create.return_value = mock_writer
         mock_editor_agent.return_value.create.return_value = mock_editor
 
-        # CORRIGE O ERRO: garante que task_prompt retorna uma lista de strings
-        mock_researcher_agent.task_prompt.return_value = [
-            "# Pesquisa mock",
-            "Instruções simuladas"
-        ]
-
         mock_crew_instance = MagicMock()
         mock_crew.return_value = mock_crew_instance
         mock_crew_instance.kickoff.return_value = (
-            '{"title": "Test Article", "summary": "This is a test summary", '
-            '"sections": [{"title": "Section 1", "content": "This is section 1 content with at least fifty characters for validation."}], '
+            '{"title": "Test Article", "summary": "This is a test summary with enough characters to pass validation. This summary should be long enough for the test to pass without issues.", '
+            '"sections": [{"title": "Section 1", "content": "This is section 1 content with at least fifty characters for validation. We need to make sure it passes the validation."},'
+            '{"title": "Section 2", "content": "This is section 2 content with at least fifty characters for validation. We need to make sure it passes the validation."}], '
             '"metadata": {"keywords": ["test"], "sources": ["test source"], "generated_at": "2025-04-18T12:00:00"}}'
         )
 
@@ -193,9 +192,13 @@ class TestArticleCrew:
 class TestArticleCrewIntegration:
     """Testes de integração para ArticleCrew."""
     
+    @patch('app.crew.article_crew.Task')
     @patch('app.crew.article_crew.Crew')
-    def test_complete_article_generation_flow(self, mock_crew, mock_researcher_result, mock_writer_result, mock_editor_result):
+    def test_complete_article_generation_flow(self, mock_crew, mock_task, mock_researcher_result, mock_writer_result, mock_editor_result):
         """Testa o fluxo completo de geração de artigos simulando as respostas dos agentes."""
+        # Configurar mock para Task para não validar
+        mock_task.return_value = MagicMock()
+        
         # Configurar o mock para retornar sequencialmente os resultados dos agentes
         mock_crew_instance = MagicMock()
         mock_crew.return_value = mock_crew_instance
